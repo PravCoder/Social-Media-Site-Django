@@ -9,6 +9,12 @@ from datetime import datetime
 from django.core.files.storage import FileSystemStorage
 import cloudinary
 import cloudinary.uploader
+import re  # run pip freeze
+
+
+def extract_hashtags(caption):
+    hashtags = re.findall(r'#\w+', caption)
+    return hashtags
 
 
 def home(request):
@@ -17,6 +23,7 @@ def home(request):
     #user.following.clear()
     posts = Post.objects.all()
     if request.method == "POST":
+        print(request.POST)
         if request.POST.get("follow") != None:
             user_to_follow = User.objects.get(id=int(request.POST.get("follow")))
             if user != user_to_follow:
@@ -44,11 +51,13 @@ def home(request):
             uploaded_image = request.FILES.get('image')
             if uploaded_image:
                 caption = request.POST.get("text-content")
+                # CLOUDINARY
                 cloudinary_response = cloudinary.uploader.upload(uploaded_image, folder="media-images")
                 public_id = cloudinary_response["public_id"]
                 print("PUBLIC-ID: " + str(public_id))
                 p1 = Post.objects.create(content=caption, posted_date=datetime.now(), author=user, varitey="image", public_id_image=public_id)
                 p1.image = cloudinary_response['secure_url']
+                # CLOUDINARY
                 user.posts.add(p1)
                 p1.save()
                 user.save()
@@ -148,11 +157,13 @@ def profile_page(request, pk):
         # UPLOAD PROFILE PICTURE
         uploaded_image = request.FILES.get('image')
         if uploaded_image:
+            # CLOUDINARY
             cloudinary_response = cloudinary.uploader.upload(uploaded_image, folder="media-images")
             public_id = cloudinary_response["public_id"]
             print("PUBLIC-ID: " + str(public_id))
             user.public_id_profile_image = public_id
             user.profile_pic = cloudinary_response['secure_url']
+            # CLOUDINARY
             user.save()
         if "unfollow" in list(request.POST.keys()):
             user_to_unfollow = User.objects.get(id=int(request.POST.get("unfollow")))
@@ -217,12 +228,12 @@ def create_post(request):
         uploaded_image = request.FILES.get('image')
         if uploaded_image:
             caption = request.POST.get("text-content")
+            # CLOUDINARY
             cloudinary_response = cloudinary.uploader.upload(uploaded_image, folder="media-images")
-
             public_id = cloudinary_response["public_id"]
             p1 = Post.objects.create(content=caption, posted_date=datetime.now(), author=user, varitey="image", public_id_image=public_id)
             p1.image = cloudinary_response['secure_url']
-
+            # CLOUDINARY
             user.posts.add(p1)
             p1.save()
             user.save()
@@ -292,22 +303,24 @@ def view_direct_message_chat(request, pk):
 # DONE: Style dm button on user profile page
 # DONE: when first time user with no account tries to access certain pages, error shows
 # DONE: Logout link/button.
-
-
-# BUGS/ERRORS:
-# BUG: Static/media files not rendering. Start new project python3 manage.py collecticstatic and confiure whitenoise. For media files configure 
+# DONE: add virtual environment for requirements.txt
+# DONE: Static/media files not rendering. Start new project python3 manage.py collecticstatic and confiure whitenoise. For media files configure 
 # cloudinary. Test in development and make sure everything is working if it is deploy!
 
+# BUGS/ERRORS:
+
+
 # FEATURES/IMRPOVEMENTS:
+# TODO: Topics model created through hashtags. And each post has a list of topcs. 
+# TODO: Search functionality by user, post content, hashtags.
 # TODO: Bug reporting page.
-# TODO: Display number of users.
-# TODO: Credits page.
+# TODO: Credits page. Display number of users.
 # TODO: Clean up login/register page,
 # TODO: Search functionality for different categories users, posts, hashtags.
 # TODO: User is verfied when someone follows them, unfollows them, likes/comments on post, uses their hashtag. 
 # TODO: Style following/followers tabs on profile page
-# TODO: add virtual environment for requirements.txt
 
 
-# Start Virtual environment: source venv/bin/activate. To create python3 -m venv venv.
-# Django version in venv Django==4.2.4  
+# NOTE: PostgreSQL database will expire on render on Nov.21. 
+# -Make sure cloudinary amount ofassests are under control.
+# -Cannot deploy multiple apps on free tier on render, so try creating multiple accounts.

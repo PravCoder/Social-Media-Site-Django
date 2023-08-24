@@ -3,8 +3,6 @@ from django.contrib.auth.models import AbstractUser
 from datetime import datetime
 from cloudinary.models import CloudinaryField
 
-"""class MediaFile(models.Model):
-    image = CloudinaryField("image")"""
 
 class User(AbstractUser):
     first_name = models.CharField(max_length=200, null=True)
@@ -56,10 +54,10 @@ class Post(models.Model):
     posted_date = models.DateTimeField(default=datetime.now, blank=True)
     image = models.FileField(upload_to='media-images', null=True, blank=True)
 
-    video = models.FileField(upload_to="videos/", null=True, blank=True)
-
     comments = models.ManyToManyField("Comment", related_name="comments", blank=True)
     public_id_image = models.CharField(max_length=100, null=-True)
+
+    #hashtags = models.ManyToManyField("Hashtag", related_name="hashtags", blank=True)
     
     @property
     def get_num_comments(self):
@@ -93,8 +91,8 @@ class DirectMessage(models.Model):
     content =  models.CharField(max_length=10000, null=True)
 
 
-
-
+"""class Hashtag(models.Model):
+    name = models.CharField(max_length=200, null=True)"""
 
 
 
