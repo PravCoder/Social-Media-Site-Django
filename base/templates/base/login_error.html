@@ -1,0 +1,16 @@
+{% extends 'main.html' %}
+
+
+{% block content %}
+<style>
+</style>
+
+
+<h1>You have to login to view the {{page_name}}</h1>
+<h3>{{message}}.</h3>
+<a href="{% url 'login' %}"class="navbar-link">Login/Register</a>
+
+
+  
+
+{% endblock %}

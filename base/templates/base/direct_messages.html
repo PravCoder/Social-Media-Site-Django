@@ -1,0 +1,134 @@
+<!--View all DMS-->
+{% extends 'main.html' %}
+
+{% block content %}
+<style>
+.dm-container {
+  display: flex;
+  justify-content: space-between;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.sidebar {
+  width: 200px;
+}
+
+.dm-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dm-item {
+  margin-bottom: 10px;
+}
+
+.dm-item a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: rgb(154, 52, 52);
+}
+
+.profile-picture {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.username {
+  font-weight: bold;
+}
+
+.chat-container {
+  flex-grow: 1;
+  margin-left: 20px;
+}
+
+.chat-section {
+  display: none;
+}
+
+.chat-messages {
+  margin-bottom: 20px;
+}
+
+.message {
+  margin-bottom: 5px;
+}
+
+.message-form input {
+  padding: 5px;
+  margin-right: 10px;
+}
+
+.message-form button {
+  padding: 5px 10px;
+}
+
+.chat-section:target {
+  display: block;
+}
+.dm-item {
+  margin-bottom: 10px;
+  border: 1px solid rgb(255, 238, 238);
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.dm-item a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: rgb(233, 232, 232);
+}
+
+.dm-item.active {
+  background-color: #1da1f2;
+  color: #fff;
+}
+
+
+.dm-item.active .profile-picture {
+  border: 2px solid #fff;
+}
+
+.dm-item.active .username {
+  font-weight: bold;
+}
+</style>
+
+<h1>{{user.username}}'s DM's</h1>
+
+<ul>
+
+        <div class="dm-container">
+            <div class="sidebar">
+              <h2>Direct Messages</h2>
+              <ul class="dm-list">
+                {% for dm in dms %}
+                    {% if user == dm.initiated_by %}
+                        <li class="dm-item">
+                            <a href="{% url 'view-direct-message-chat' dm.id %}">
+                              <img src="{{dm.to_user.profile_pic.url}}" alt="Profile Picture" class="profile-picture">
+                              <span class="username">{{dm.to_user.username}}</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="dm-item">
+                            <a href="{% url 'view-direct-message-chat' dm.id %}">
+                            <img src="{{dm.initiated_by.profile_pic.url}}" alt="Profile Picture" class="profile-picture">
+                            <span class="username">{{dm.initiated_by.username}}</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+    
+</ul>
+{% endblock %}

@@ -1,0 +1,1179 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<style>
+.dm-container {
+  display: flex;
+  justify-content: space-between;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.sidebar {
+  width: 200px;
+}
+
+.dm-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dm-item {
+  margin-bottom: 10px;
+  border: 1px solid rgb(255, 238, 238);
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.dm-item a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: rgb(233, 232, 232);
+}
+
+.dm-item.active {
+  background-color: #1da1f2;
+  color: #fff;
+}
+
+.dm-item.active .profile-picture {
+  border: 2px solid #fff;
+}
+
+.dm-item.active .username {
+  font-weight: bold;
+}
+
+.dm-container .chat-container {
+  flex-grow: 1;
+  margin-left: 20px;
+}
+
+.chat-section {
+  display: none;
+}
+
+.chat-section:target {
+  display: block;
+}
+
+.chat-container .message {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.chat-container .message .profile-picture {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 10px;
+}
+
+.chat-container .message .profile-picture .picture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.chat-container .message-content {
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.chat-container .current-user {
+  background-color: #1da1f2;
+  color: #fff;
+}
+
+.chat-container .other-user {
+  background-color: #f0f0f0;
+}
+
+.chat-container .text {
+  color: #333;
+}
+
+.chat-container .input-container {
+  display: flex;
+  align-items: center;
+}
+
+.chat-container #msg-content {
+  flex-grow: 1;
+  padding: 5px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.chat-container #send-button {
+  background-color: #1da1f2;
+  color: #fff;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+</style>
+
+<h1>{{ user.username }}'s DM's</h1>
+
+<div class="dm-container">
+  <div class="sidebar">
+    <h2>Direct Messages</h2>
+    <ul class="dm-list">
+      {% for dm in dms %}
+      <li class="dm-item {% if dm == selected_dm %}active{% endif %}">
+        <a href="{% url 'view-direct-message-chat' dm.id %}">
+          {% if user == dm.initiated_by %}
+            <li class="dm-item">
+              <a href="{% url 'view-direct-message-chat' dm.id %}">
+                <img src="{{dm.to_user.profile_pic.url}}" alt="Profile Picture" class="picture">
+                <span class="username">{{dm.to_user.username}}</span>
+              </a>
+            </li>
+          {% else %}
+            <li class="dm-item">
+              <a href="{% url 'view-direct-message-chat' dm.id %}">
+                <img src="{{dm.initiated_by.profile_pic.url}}" alt="Profile Picture" class="picture">
+                <span class="username">{{dm.initiated_by.username}}</span>
+              </a>
+            </li>
+          {% endif %}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="chat-container">
+    {% for dm in dms %}
+        <div class="chat-section" id="dm{{ dm.id }}">
+        <div class="header">
+            <div class="user-info">
+                {% if user == dm.initiated_by %}
+                    <li class="dm-item">
+                    <a href="{% url 'view-direct-message-chat' dm.id %}">
+                        <img src="{{dm.to_user.profile_pic.url}}" alt="Profile Picture" class="picture">
+                        <span class="username">{{dm.to_user.username}}</span>
+                    </a>
+                    </li>
+                {% else %}
+                    <li class="dm-item">
+                    <a href="{% url 'view-direct-message-chat' dm.id %}">
+                        <img src="{{dm.initiated_by.profile_pic.url}}" alt="Profile Picture" class="picture">
+                        <span class="username">{{dm.initiated_by.username}}</span>
+                    </a>
+                    </li>
+                {% endif %}
+            </div>
+        </div>
+        <div class="messages-container">
+            {% for message in dm.messages.all() %}
+                <div class="message {% if message.sent_by == user %}current-user{% else %}other-user{% endif %}">
+                <div class="profile-picture">
+                    <img src="{{ message.profile_pic }}" alt="Profile Picture" class="picture">
+                </div>
+                <div class="message-content">
+                    <div class="username">{{ message.username }}</div>
+                    <div class="text">{{ message.content }}</div>
+                </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="input-container">
+            <form method="POST" action="">
+            {% csrf_token %}
+            <textarea id="msg-content" name="msg-content" rows="5" cols="80" placeholder="Type your message"></textarea>
+            <button id="send-button">Send</button>
+            </form>
+        </div>
+        </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--View all DMS-->
+{% extends 'main.html' %}
+
+{% block content %}
+<style>
+.dm-container {
+  display: flex;
+  justify-content: space-between;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.sidebar {
+  width: 200px;
+}
+
+.dm-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dm-item {
+  margin-bottom: 10px;
+}
+
+.dm-item a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: rgb(154, 52, 52);
+}
+
+.profile-picture {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.username {
+  font-weight: bold;
+}
+
+.chat-container {
+  flex-grow: 1;
+  margin-left: 20px;
+}
+
+.chat-section {
+  display: none;
+}
+
+.chat-messages {
+  margin-bottom: 20px;
+}
+
+.message {
+  margin-bottom: 5px;
+}
+
+.message-form input {
+  padding: 5px;
+  margin-right: 10px;
+}
+
+.message-form button {
+  padding: 5px 10px;
+}
+
+.chat-section:target {
+  display: block;
+}
+.dm-item {
+  margin-bottom: 10px;
+  border: 1px solid rgb(255, 238, 238);
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.dm-item a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: rgb(233, 232, 232);
+}
+
+.dm-item.active {
+  background-color: #1da1f2;
+  color: #fff;
+}
+
+
+.dm-item.active .profile-picture {
+  border: 2px solid #fff;
+}
+
+.dm-item.active .username {
+  font-weight: bold;
+}
+</style>
+
+<h1>{{user.username}}'s DM's</h1>
+
+<ul>
+
+        <div class="dm-container">
+            <div class="sidebar">
+              <h2>Direct Messages</h2>
+              <ul class="dm-list">
+                {% for dm in dms %}
+                    {% if user == dm.initiated_by %}
+                        <li class="dm-item">
+                            <a href="{% url 'view-direct-message-chat' dm.id %}">
+                              <img src="{{dm.to_user.profile_pic.url}}" alt="Profile Picture" class="profile-picture">
+                              <span class="username">{{dm.to_user.username}}</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="dm-item">
+                            <a href="{% url 'view-direct-message-chat' dm.id %}">
+                            <img src="{{dm.initiated_by.profile_pic.url}}" alt="Profile Picture" class="profile-picture">
+                            <span class="username">{{dm.initiated_by.username}}</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+    
+</ul>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% extends 'main.html' %}
+
+{% block content %}
+<style>
+  .profile2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .profile-picture2 {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 20px;
+  }
+
+  .profile-picture2 img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .profile-info2 {
+    font-family: Arial, sans-serif;
+    text-align: left;
+  }
+
+  .name2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .username2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .bio2 {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+
+  .details2 {
+    font-size: 14px;
+    color: #777;
+  }
+
+  .details2 span {
+    font-weight: bold;
+    margin-right: 5px;
+  }
+
+  .email2,
+  .location2,
+  .website2 {
+    margin-bottom: 5px;
+  }
+
+  .website2 a {
+    color: #1da1f2;
+    text-decoration: none;
+  }
+
+  .website2 a:hover {
+    text-decoration: underline;
+  }
+
+  .tab-container2 {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .tab-buttons2 {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+  }
+
+  .tab-button2 {
+    border: none;
+    background: none;
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    color: #777;
+    outline: none;
+  }
+
+  .tab-button2:hover,
+  .tab-button2.active {
+    color: #333;
+  }
+
+  .tab-content2 {
+    border: 1px solid #ddd;
+    padding: 20px;
+  }
+
+  .tab2 {
+    display: none;
+  }
+
+  .tab2.active {
+    display: block;
+  }
+
+</style>
+
+<div class="profile2">
+  <div class="profile-picture2">
+    {% if user.profile_pic %}
+      <img src="{{ user.profile_pic.url }}" alt="Profile Picture">
+    {% else %}
+      <img src="default-profile-picture.jpg" alt="Profile Picture">
+    {% endif %}
+  </div>
+  <div class="profile-info2">
+    <div class="name2">{{ user.username }}</div>
+    <div class="username2">{{ user.first_name }} {{ user.last_name }}</div>
+    <div class="bio2">{{ user.biography }}</div>
+    <div class="details2">
+      <div class="email2">
+        <span>Email:</span> {{ user.email }}
+      </div>
+      <div class="location2">
+        <span>Location:</span> None
+      </div>
+      <div class="website2">
+        <span>Website:</span> <a href="https://example.com">example.com</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const tabButtons = document.querySelectorAll(".tab-button");
+    const tabContents = document.querySelectorAll(".tab");
+
+    tabButtons.forEach(function(button) {
+      button.addEventListener("click", function() {
+        const tabId = this.dataset.tab;
+
+        tabButtons.forEach(function(button) {
+          button.classList.remove("active");
+        });
+
+        tabContents.forEach(function(tab) {
+          tab.classList.remove("active");
+        });
+
+        this.classList.add("active");
+        document.getElementById(tabId).classList.add("active");
+      });
+    });
+  });
+</script>
+
+<div class="tab-container">
+  <div class="tab-buttons">
+    <button class="tab-button active" data-tab="tab1">Following</button>
+    <button class="tab-button" data-tab="tab2">Followers</button>
+    <button class="tab-button" data-tab="tab3">Liked Posts</button>
+  </div>
+  <div class="tab-content">
+    <div class="tab active" id="tab1">
+      <!-- Following Tab Content -->
+    </div>
+    <div class="tab" id="tab2">
+      <!-- Followers Tab Content -->
+    </div>
+    <div class="tab" id="tab3">
+      <!-- Liked Posts Tab Content -->
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% extends 'main.html' %}
+
+{% block content %}     
+<style>
+.profile {
+  display: flex;
+  align-items: flex-start;
+}
+
+.profile-picture {
+  width: 150px;
+  height: 150px;
+  border-radius: 0%;
+  overflow: hidden;
+  margin-right: 20px;
+  box-shadow: 0 2px 5px rgb(207, 207, 207);
+}
+
+.picture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-info {
+  font-family: Arial, sans-serif;
+  color: rgb(255, 248, 248);
+}
+
+.name {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.username {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: rgb(255, 255, 255);
+}
+
+.bio {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.details {
+  font-size: 14px;
+  color: rgb(255, 255, 255);
+}
+
+.details span {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.email,
+.location,
+.website {
+  margin-bottom: 5px;
+}
+
+.website a {
+  color: #1da1f2;
+  text-decoration: none;
+}
+
+.website a:hover {
+  text-decoration: underline;
+} 
+
+
+
+
+.tab-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.tab-buttons {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+
+.tab-button {
+  border: none;
+  background: none;
+  padding: 10px 20px;
+  font-size: 18px;
+  cursor: pointer;
+  color: rgb(255, 255, 255);
+  outline: none;
+}
+
+.tab-button:hover,
+.tab-button.active {
+  color: rgb(19, 109, 198);
+}
+
+.tab-content {
+  border: 1px solid #ddd;
+  padding: 20px;
+}
+
+.tab {
+  display: none;
+}
+
+.tab.active {
+  display: block;
+}
+
+
+
+
+
+
+.avatar {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  
+    object-fit: cover;
+  
+  }
+  .feed {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .post {
+    width: 500px;
+    margin-bottom: 20px;
+    background-color: #f1f1f1;
+    border-radius: 10px;
+    
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .author-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .author-profile {
+    margin-right: 10px;
+  }
+  
+  .profile-picture {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  
+  .post-author {
+    font-weight: bold;
+    color: #000;
+  }
+  
+  .follow-button {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .post-link {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .post-image {
+    margin-top: 10px;
+    position: relative;
+  }
+  
+  .post-image img {
+    width: 100%;
+    border-radius: 5px;
+  }
+  
+  .post-caption {
+    padding: 10px;
+    color: #000;
+    font-size: 14px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+  
+  .post-footer {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .like-button {
+    background-color: #2ecc71;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .post-likes {
+    margin-left: 5px;
+    color: #999;
+    font-size: 12px;
+  }
+  
+  .follow-button,
+  .like-button {
+    margin-right: 10px;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  .profile2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .profile-picture2 {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 20px;
+  }
+
+  .profile-picture2 img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .profile-info2 {
+    font-family: Arial, sans-serif;
+    text-align: left;
+  }
+
+  .name2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .username2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .bio2 {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+
+  .details2 {
+    font-size: 14px;
+    color: #777;
+  }
+
+  .details2 span {
+    font-weight: bold;
+    margin-right: 5px;
+  }
+
+  .email2,
+  .location2,
+  .website2 {
+    margin-bottom: 5px;
+  }
+
+  .website2 a {
+    color: #1da1f2;
+    text-decoration: none;
+  }
+
+  .website2 a:hover {
+    text-decoration: underline;
+  }
+
+  .tab-container2 {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .tab-buttons2 {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+  }
+
+  .tab-button2 {
+    border: none;
+    background: none;
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    color: #777;
+    outline: none;
+  }
+
+  .tab-button2:hover,
+  .tab-button2.active {
+    color: #333;
+  }
+
+  .tab-content2 {
+    border: 1px solid #ddd;
+    padding: 20px;
+  }
+
+  .tab2 {
+    display: none;
+  }
+
+  .tab2.active {
+    display: block;
+  }
+
+
+
+
+
+
+
+
+
+
+
+.body3 {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  padding: 20px;
+}
+
+.profile-list3 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.profile3 {
+  width: 200px;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: left;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+}
+
+.profile-picture3 {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.profile-picture3 img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.name3 {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.username {
+  font-size: 12px;
+  color: #777;
+}
+
+.username3 {
+  margin-left: auto;
+  white-space: nowrap;
+}
+</style>
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const tabButtons = document.querySelectorAll(".tab-button");
+  const tabContents = document.querySelectorAll(".tab");
+
+  tabButtons.forEach(function(button) {
+    button.addEventListener("click", function() {
+      const tabId = this.dataset.tab;
+
+      tabButtons.forEach(function(button) {
+        button.classList.remove("active");
+      });
+
+      tabContents.forEach(function(tab) {
+        tab.classList.remove("active");
+      });
+
+      this.classList.add("active");
+      document.getElementById(tabId).classList.add("active");
+    });
+  });
+});
+
+</script>
+<div class="profile2">
+  <div class="profile-picture2">
+    {% if user.profile_pic %}
+      <img src="{{ user.profile_pic.url }}" alt="Profile Picture">
+    {% else %}
+      <img src="default-profile-picture.jpg" alt="Profile Picture">
+    {% endif %}
+  </div>
+  <div class="profile-info2">
+    <div class="name2">{{ user.username }}</div>
+    <div class="username2">{{ user.first_name }} {{ user.last_name }}</div>
+    <div class="bio2">{{ user.biography }}</div>
+    <div class="details2">
+      <div class="email2">
+        <span>Email:</span> {{ user.email }}
+      </div>
+      <div class="location2">
+        <span>Location:</span> None
+      </div>
+      <div class="website2">
+        <span>Website:</span> <a href="https://example.com">example.com</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="tab-container">
+  <div class="tab-buttons">
+    <button class="tab-button active" data-tab="tab1">Following</button>
+    <button class="tab-button" data-tab="tab2">Followers</button>
+    <button class="tab-button" data-tab="tab3">Liked posts</button>
+  </div>
+  <div class="tab-content">
+    <div class="tab" id="tab1">
+      {% for u in following %}
+
+        <!--Circle profile list-->
+        <body>
+          <div class="profile-list3">
+            <div class="profile3">
+              <div class="profile-picture3">
+                <a href="{% url 'view-profile' u.id %}"><img src="{{u.profile_pic.url}}" alt="User 1"></a>
+              </div>
+              <div class="username3">@<a href="{% url 'view-profile' u.id %}">{{u.username}}</a></div>
+          </div>
+          <form method="POST" action="">
+            {% csrf_token %}
+            <button type="submit" name="unfollow" value="{{u.id}}">UNFOLLOW</button>
+          </form>
+        </body>
+        <!--Circle profile list-->
+      {% endfor %}
+    </div>
+
+
+    <div class="tab" id="tab2">
+      {% for x in followers %}
+        {% if x != user %}
+          <a href="{% url 'view-profile' x.id %}"><img src="{{x.profile_pic.url}}" alt="NONE" width="50" height="50"><h4>{{x.username}} </h4></a>
+          <!--Circle profile list-->
+          <body>
+            <div class="profile-list3">
+              <div class="profile3">
+                <div class="profile-picture3">
+                  <a href="{% url 'view-profile' x.id %}"><img src="{{x.profile_pic.url}}" alt="User 1"></a>
+                </div>
+                <div class="username3">@<a href="{% url 'view-profile' x.id %}">{{x.username}}</a></div>
+            </div>
+
+          </body>
+          <!--Circle profile list-->
+        {% endif %}
+      {% endfor %}
+    </div>
+
+
+    <div class="tab" id="tab3">
+      {% for p in liked_posts %}
+        <div class="post">
+          <div class="post-header">
+            <div class="author-info">
+              <a href="{% url 'view-profile' p.author.id %}" class="author-profile">
+                <img src="{{p.author.profile_pic.url}}" alt="Profile Picture" class="profile-picture">
+              </a>
+              <div class="post-author">{{p.author.username}}</div>
+              {% if user != p.author %}
+                <div>
+                  <form method="POST" action="">
+                      {% csrf_token %}
+                      <button type="submit" name="follow" value="{{p.author.id}}" class="follow-button">Follow</button>
+                  </form>
+
+                </div>
+              {% endif %}
+            </div>
+          </div>
+          {% if p.varitey == "image" %}
+            <a href="{% url 'view-post' p.id %}" class="post-link">
+              <div class="post-image">
+                <img src="{{p.image.url}}" alt="Post Image">
+              </div>
+              <div class="post-caption">{{p.content}}</div>
+            </a>
+          {% else %}
+            <a href="{% url 'view-post' p.id %}" class="post-link">
+              <div class="post-caption">{{p.content}}</div>
+            </a>
+          {% endif %}
+          <div class="post-footer">
+            <div>
+              <form method="POST" action="">
+                  {% csrf_token %}
+                  <button type="submit" name="like" value="{{p.id}}" class="like-button">Like</button>
+              </form>
+            </div>
+            <div class="post-likes">Likes: {{p.likes}}, {{p.posted_date}}</div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  
+</div>
+
+
+
+
+{% if is_user == True %}
+<div class="container">
+    <!--Simple Form-->
+    <h2 class="my-4">Select new Profile picture</h2>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+          <input type="file" name="upload" accept=".doc, .docx, .pdf, .txt, .jpg, .png">
+          <br>
+          <button class="btn btn-dark my-4" type="submit">Submit</button>
+    </form>
+</div>
+{% endif %}
+
+{% if is_user == False %}
+<form method="POST">
+  {% csrf_token %}
+      <button type="submit" name="dm" value="{{request.user}}">DM {{user.username}}</button>  
+</form>
+{% endif %}
+
+
+
+
+{% endblock %}

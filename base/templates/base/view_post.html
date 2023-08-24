@@ -1,0 +1,233 @@
+{% extends 'main.html' %}
+
+
+{% block content %}     
+<style>
+.post-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.author-info {
+    display: flex;
+    align-items: center;
+}
+
+.profile-picture {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 10px;
+}
+
+.profile-picture .picture {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.author-details {
+    font-weight: bold;
+}
+
+.post-likes {
+    display: flex;
+    align-items: center;
+    padding-right: 5px;
+}
+
+.like-icon {
+    width: 20px;
+    height: 20px;
+    background-color: #ff3860;
+    border-radius: 50%;
+    margin-right: 5px;
+    
+}
+.comment-icon {
+    width: 20px;
+    height: 20px;
+    background-color: #433336;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.like-count {
+    color: #888;
+}
+
+.post-content {
+    margin-bottom: 20px;
+}
+
+.post-image {
+    width: 100%;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.post-text {
+    color: #333;
+    line-height: 1.5;
+}
+
+.comments-section {
+    margin-bottom: 20px;
+}
+
+.comment {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.comment-author {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.comment-author .profile-picture {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 5px;
+}
+
+.comment-author .profile-picture .picture {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.author-name {
+    font-weight: bold;
+    color: black;
+}
+
+.comment-text {
+    color: #333;
+}
+
+.add-comment-section textarea {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.add-comment-section .submit-button {
+    background-color: #1da1f2;
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+</style>
+
+
+
+
+
+<div class="post-container">
+    <div class="post-header">
+      <div class="author-info">
+        <div class="profile-picture">
+            <a href="{% url 'view-profile' post.author.id %}"><img src="{{post.author.profile_pic.url}}" alt="Profile Picture" class="picture"></a>
+        </div>
+        <div class="author-details">
+          <div class="author-name">{{post.author.username}}</div>
+          <div class="post-date">{{post.posted_date}}</div>
+        </div>
+      </div>
+      <div class="post-likes">
+        <div class="like-icon"></div>
+        <div class="like-count">{{post.likes}}</div>
+
+        <div class="comment-icon"></div>
+        <div class="like-count">{{post.get_num_comments}}</div>
+      </div>
+    </div>
+    <div class="post-content">
+        {% if post.varitey == "image" %}
+            <img src="{{post.image.url}}" alt="Post Image" class="post-image">
+        {% endif %}
+        <p class="post-text">{{post.content}}</p>
+    </div>
+
+    <div class="comments-section">
+      <h3>Comments</h3>
+      {% for c in comments %} 
+        <div class="comment">
+            <div class="comment-author">
+            <div class="profile-picture">
+                <a href="{% url 'view-profile' c.user.id %}"><img src="{{c.user.profile_pic.url}}" alt="Profile Picture" class="picture"></a>
+            </div>
+            <div class="author-name">{{c.user.username}}</div>
+            </div>
+            <div class="comment-text">{{c.content}}</div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="add-comment-section">
+        <form method="POST" action="">
+            {% csrf_token %}
+            <textarea id="comment-content" name="comment-content" placeholder="Add a comment"></textarea>
+            <button class="submit-button">Submit</button>
+        </form>
+    </div>
+</div>
+<!-- block name-of-block
+<h1><a href="{% url 'view-profile' post.author.id %}"></a></h1>
+
+
+<h3>POST: {{post.content}}</h3>
+<h4>Likes: {{post.likes}}, {{post.posted_date}}</h4>
+
+
+{% if post.varitey == "image" %}
+    <a href="{% url 'view-profile' post.author.id %}"><img src="{{post.author.profile_pic.url}}" alt="Image Unavalible" width="50" height="50"><h4>{{post.author.username}} </h4></a>
+    <img src="{{post.image.url}}" alt="Smiley face" width="200" height="200">
+{% else %}
+    <a href="{% url 'view-profile' post.author.id %}"><img src="{{post.author.profile_pic.url}}" alt="Image Unavalible" width="50" height="50"><h4>{{post.author.username}} </h4></a>
+{% endif %}
+
+
+<div>
+    <form method="POST" action="">
+        {% csrf_token %}
+        <h4>Enter the caption/content of your comment:</h4>
+        <textarea id="comment-content" name="comment-content" rows="10" cols="100"></textarea>
+        <input type="submit" class="registerbtn" value="POST">
+    </form>
+</div>
+
+{% for c in comments %} 
+    <h4>{{c.user.username}} </h4>
+    <a href="{% url 'view-profile' c.user.id %}"><img src="{{c.user.profile_pic.url}}" alt="Image Unavalible" width="50" height="50"></a>
+    {{c.content}}
+    <hr>
+{% endfor %}
+-->
+
+
+{% endblock %}

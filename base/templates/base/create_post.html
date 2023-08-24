@@ -1,0 +1,28 @@
+{% extends 'main.html' %}
+{% load cloudinary %}
+
+{% block content %}     <!-- block name-of-block -->
+<h1>Create Post!</h1>
+
+
+<!--
+<div>
+    <form method="POST" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h4>Enter the caption/content of your post:</h4>
+        <textarea id="text-content" name="text-content" rows="10" cols="100"></textarea>
+        <input type="file" name="upload" accept=".doc, .docx, .pdf, .txt, .jpg, .png">
+        <input type="submit" class="registerbtn" value="POST">
+    </form>
+</div>
+-->
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <h4>Enter the caption/content of your post:</h4>
+    <textarea id="text-content" name="text-content" rows="10" cols="100"></textarea>
+    <input type="file" name="image">
+    <button type="submit">POST!</button>
+</form>
+{% endblock %}
+

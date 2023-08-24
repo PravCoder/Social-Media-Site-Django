@@ -1,0 +1,783 @@
+{% extends 'main.html' %}
+
+{% block content %}     
+<style>
+.profile {
+  display: flex;
+  align-items: flex-start;
+}
+
+.profile-picture {
+  width: 150px;
+  height: 150px;
+  border-radius: 0%;
+  overflow: hidden;
+  margin-right: 20px;
+  box-shadow: 0 2px 5px rgb(207, 207, 207);
+}
+
+.picture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-info {
+  font-family: Arial, sans-serif;
+  color: rgb(255, 248, 248);
+}
+
+.name {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.username {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: rgb(255, 255, 255);
+}
+
+.bio {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.details {
+  font-size: 14px;
+  color: rgb(255, 255, 255);
+}
+
+.details span {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.email,
+.location,
+.website {
+  margin-bottom: 5px;
+}
+
+.website a {
+  color: #1da1f2;
+  text-decoration: none;
+}
+
+.website a:hover {
+  text-decoration: underline;
+} 
+
+
+
+
+.tab-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.tab-buttons {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+
+.tab-button {
+  border: none;
+  background: none;
+  padding: 10px 20px;
+  font-size: 18px;
+  cursor: pointer;
+  color: rgb(255, 255, 255);
+  outline: none;
+}
+
+.tab-button:hover,
+.tab-button.active {
+  color: rgb(19, 109, 198);
+}
+
+.tab-content {
+  border: 1px solid #ddd;
+  padding: 20px;
+}
+
+.tab {
+  display: none;
+}
+
+.tab.active {
+  display: block;
+}
+
+
+
+
+
+
+.avatar {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+
+  object-fit: cover;
+
+}
+.feed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.post {
+  width: 500px;
+  margin-bottom: 20px;
+  background-color: #f1f1f1;
+  border-radius: 10px;
+  
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.author-info {
+  display: flex;
+  align-items: center;
+}
+
+.author-profile {
+  margin-right: 10px;
+}
+
+.profile-picture {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.post-author {
+  font-weight: bold;
+  color: #000;
+}
+
+.follow-button {
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.post-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.post-image {
+  margin-top: 10px;
+  position: relative;
+}
+
+.post-image img {
+  width: 100%;
+  border-radius: 5px;
+}
+
+.post-caption {
+  padding: 10px;
+  color: #000;
+  font-size: 14px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.post-footer {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.like-button {
+  background-color: #2ecc71;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.post-likes {
+  margin-left: 5px;
+  color: #999;
+  font-size: 12px;
+}
+
+.follow-button,
+.like-button {
+  margin-right: 10px;
+}
+
+.delete-button {
+  background-color: #cc2e2e;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  align-self: left;
+  margin-left: 330px;
+}
+.post-delete {
+  margin-left: 5px;
+  color: #999;
+  font-size: 12px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  .profile2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 100px;
+  }
+
+  .profile-picture2 {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 20px;
+  }
+
+  .profile-picture2 img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .profile-info2 {
+    font-family: Arial, sans-serif;
+    text-align: left;
+  }
+
+  .name2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .username2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .bio2 {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+
+  .details2 {
+    font-size: 14px;
+    color: #777;
+  }
+
+  .details2 span {
+    font-weight: bold;
+    margin-right: 5px;
+  }
+
+  .email2,
+  .location2,
+  .website2 {
+    margin-bottom: 5px;
+  }
+
+  .website2 a {
+    color: #1da1f2;
+    text-decoration: none;
+  }
+
+  .website2 a:hover {
+    text-decoration: underline;
+  }
+
+  .tab-container2 {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .tab-buttons2 {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+  }
+
+  .tab-button2 {
+    border: none;
+    background: none;
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    color: #777;
+    outline: none;
+  }
+
+  .tab-button2:hover,
+  .tab-button2.active {
+    color: #333;
+  }
+
+  .tab-content2 {
+    border: 1px solid #ddd;
+    padding: 20px;
+  }
+
+  .tab2 {
+    display: none;
+  }
+
+  .tab2.active {
+    display: block;
+  }
+
+
+
+
+
+
+
+
+
+
+
+.body3 {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  padding: 20px;
+}
+
+.profile-list3 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.profile3 {
+  width: 200px;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: left;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+}
+
+.profile-picture3 {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.profile-picture3 img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.name3 {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.username {
+  font-size: 12px;
+  color: #777;
+}
+
+.username3 {
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+
+
+
+
+
+
+.popup {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.popup-content {
+  background-color: #fefefe;
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 500px;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: #333;
+  text-decoration: none;
+}
+
+#post-button {
+  background-color: #1da1f2;
+  color: #fff;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.dm-button {
+  background-color: #1da1f2;
+  color: #fff;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.file-label {
+  display: inline-block;
+  background-color: #1da1f2;
+  color: #fff;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.post-button {
+  background-color: #1da1f2;
+  color: #fff;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#post-popup.show {
+  display: block;
+}
+
+.black-text {
+  color: rgb(0, 0, 0);
+}
+</style>
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const tabButtons = document.querySelectorAll(".tab-button");
+  const tabContents = document.querySelectorAll(".tab");
+
+  tabButtons.forEach(function(button) {
+    button.addEventListener("click", function() {
+      const tabId = this.dataset.tab;
+
+      tabButtons.forEach(function(button) {
+        button.classList.remove("active");
+      });
+
+      tabContents.forEach(function(tab) {
+        tab.classList.remove("active");
+      });
+
+      this.classList.add("active");
+      document.getElementById(tabId).classList.add("active");
+    });
+  });
+});
+
+</script>
+<div class="profile2">
+  <div class="profile-picture2">
+      <img src="{{ user.get_profile_pic }}" alt="Profile Picture">
+  </div>
+  <div class="profile-info2">
+    <div class="name2">{{ user.username }}</div>
+    <div class="username2">{{ user.first_name }} {{ user.last_name }}</div>
+    <div class="bio2">{{ user.biography }}</div>
+    <div class="details2">
+      <div class="email2">
+        <span>Email:</span> {{ user.email }}
+      </div>
+      <div class="location2">
+        <span>Location:</span> None
+      </div>
+      <div class="website2">
+        <span>Website:</span> <a href="https://example.com">example.com</a>
+      </div>
+      {% if is_user == True %}
+        <button id="post-button">Edit Profile</button>
+      {% else %}
+        <form method="POST">
+          {% csrf_token %}
+              <button type="submit" name="dm" value="{{request.user}}" class="dm-button">DM {{user.username}}</button>  
+        </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+<div class="tab-container">
+  <div class="tab-buttons">
+    <button class="tab-button active" data-tab="tab4">Posts</button>
+    <button class="tab-button" data-tab="tab1">Following</button>
+    <button class="tab-button" data-tab="tab2">Followers</button>
+    <button class="tab-button" data-tab="tab3">Liked posts</button>
+  </div>
+  
+  <div class="tab-content">
+    <div class="tab" id="tab1">
+      {% for u in following %}
+        <a href="{% url 'view-profile' u.id %}"><img src="{{ u.get_profile_pic }}" alt="NONE" width="50" height="50"><h4>{{u.username}} </h4></a>
+        {% if request.user == user %}
+          <form method="POST" action="">
+              {% csrf_token %}
+              <button type="submit" name="unfollow" value="{{u.id}}" id="post-button">UNFOLLOW</button>
+          </form>
+        {% endif %}
+
+      {% endfor %}
+    </div>
+    <div class="tab" id="tab2">
+      {% for x in followers %}
+        {% if x != user %}
+          <a href="{% url 'view-profile' x.id %}"><img src="{{ x.get_profile_pic }}" alt="NONE" width="50" height="50"><h4>{{x.username}} </h4></a>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <div class="tab" id="tab3">
+      {% for p in liked_posts %}
+        <div class="post">
+          <div class="post-header">
+            <div class="author-info">
+              <a href="{% url 'view-profile' p.author.id %}" class="author-profile">
+                <img src="{{p.author.profile_pic.url}}" alt="Profile Picture" class="profile-picture">
+              </a>
+              <div class="post-author">{{p.author.username}}</div>
+              {% if user != p.author %}
+                <div>
+                  <form method="POST" action="">
+                      {% csrf_token %}
+                      <button type="submit" name="follow" value="{{p.author.id}}" class="follow-button">Follow</button>
+                  </form>
+
+                </div>
+              {% endif %}
+            </div>
+          </div>
+          {% if p.varitey == "image" %}
+            <a href="{% url 'view-post' p.id %}" class="post-link">
+              <div class="post-image">
+                <img src="{{ p.get_image }}" alt="Post Image">
+              </div>
+              <div class="post-caption">{{p.content}}</div>
+            </a>
+          {% else %}
+            <a href="{% url 'view-post' p.id %}" class="post-link">
+              <div class="post-caption">{{p.content}}</div>
+            </a>
+          {% endif %}
+          <div class="post-footer">
+            <div>
+              <form method="POST" action="">
+                  {% csrf_token %}
+                  <button type="submit" name="like" value="{{p.id}}" class="like-button">Like</button>
+              </form>
+            </div>
+            <div class="post-likes">Likes: {{p.likes}}, {{p.posted_date}}</div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="tab" id="tab4">
+      {% for p in profile_posts %}
+        <div class="post">
+          <div class="post-header">
+            <div class="author-info">
+              <a href="{% url 'view-profile' p.author.id %}" class="author-profile">
+                <img src="{{ p.author.get_profile_pic }}" alt="Profile Picture" class="profile-picture">
+              </a>
+              <div class="post-author">{{p.author.username}}</div>
+              {% if is_user == True %} <!--Delete button for current user visiting own profile-->
+                  <form method="POST" action="">
+                    {% csrf_token %}
+                    <button type="submit" name="delete-post" value="{{p.id}}" class="delete-button" id="delete-button">Delete</button>
+                  </form>
+              {% endif %}
+              {% if user != p.author %}
+                <div>
+                  <form method="POST" action="">
+                      {% csrf_token %}
+                      <button type="submit" name="follow" value="{{p.author.id}}" class="follow-button">Follow</button>
+                  </form>
+
+                </div>
+              {% endif %}
+            </div>
+          </div>
+          {% if p.varitey == "image" %}
+            <a href="{% url 'view-post' p.id %}" class="post-link">
+              <div class="post-image">
+                <img src="{{ p.get_image }}" alt="Post Image">
+              </div>
+              <div class="post-caption">{{p.content}}</div>
+            </a>
+          {% else %}
+            <a href="{% url 'view-post' p.id %}" class="post-link">
+              <div class="post-caption">{{p.content}}</div>
+            </a>
+          {% endif %}
+          <div class="post-footer">
+            <div>
+              <form method="POST" action="">
+                  {% csrf_token %}
+                  <button type="submit" name="like" value="{{p.id}}" class="like-button">Like</button>
+              </form>
+            </div>
+            <div class="post-likes">Likes: {{p.likes}}, {{p.posted_date}}</div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+
+
+
+{% if is_user == True %}
+
+
+<div id="post-popup" class="popup">
+  <div class="popup-content">
+    <span class="close">&times;</span>
+
+    <form method="POST" action="" enctype="multipart/form-data">
+      {% csrf_token %}
+      <h4 class="black-text">Change Name:</h4>
+      <textarea id="edit-firstname" name="edit-firstname" rows="3" cols="65">{{user.first_name}}</textarea>
+
+      <h4 class="black-text">Change Name:</h4>
+      <textarea id="edit-lastname" name="edit-lastname" rows="3" cols="65">{{user.last_name}}</textarea>
+
+      <h4 class="black-text">Change Username:</h4>
+      <textarea id="edit-username" name="edit-username" rows="3" cols="65">{{user.username}}</textarea>
+
+      <h4 class="black-text">Change Biography:</h4>
+      <textarea id="edit-bio" name="edit-bio" rows="3" cols="65">{{user.biography}}</textarea>
+
+      <h4 >Change Email:</h4>
+      <textarea id="edit-email" name="edit-email" rows="3" cols="65">{{user.email}}</textarea>
+
+      <h4 class="black-text">Choose New Profile Picture:</h4>
+      <input type="file" name="image">
+
+      <input type="submit" class="post-button" value="CHANGE">
+    </form>
+
+  </div>
+</div>
+
+
+
+
+<div id="delete-post-popup" class="popup">
+  <div class="popup-content">
+    <span class="close">&times;</span>
+
+    <form method="POST" action="" enctype="multipart/form-data">
+      {% csrf_token %}
+      <h4 class="black-text">Are you sure you want to delete this post? </h4>
+      <textarea id="edit-firstname" name="edit-firstname" rows="3" cols="65">{{user.first_name}}</textarea>
+
+    </form>
+
+  </div>
+</div>
+
+<script>
+// JavaScript to toggle the pop-up
+const postButton = document.getElementById("post-button");
+const postPopup = document.getElementById("post-popup");
+const closeButton = document.getElementsByClassName("close")[0];
+
+postButton.addEventListener("click", function() {
+  postPopup.classList.add("show");
+});
+
+closeButton.addEventListener("click", function() {
+  postPopup.classList.remove("show");
+});
+
+</script>
+
+
+
+{% endif %}
+
+<!--
+{% if is_user == False %}
+<form method="POST">
+  {% csrf_token %}
+      <button type="submit" name="dm" value="{{request.user}}">DM {{user.username}}</button>  
+</form>
+{% endif %}
+-->
+
+
+
+{% endblock %}

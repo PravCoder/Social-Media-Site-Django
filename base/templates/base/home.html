@@ -1,0 +1,325 @@
+{% extends 'main.html' %}
+{% load static %}
+
+
+
+{% block content %}     
+<style>
+
+.button {
+  background-color: #ffffff; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.avatar {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+
+  object-fit: cover;
+
+}
+.feed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.post {
+  width: 500px;
+  margin-bottom: 20px;
+  background-color: #f1f1f1;
+  border-radius: 10px;
+  
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.author-info {
+  display: flex;
+  align-items: center;
+}
+
+.author-profile {
+  margin-right: 10px;
+}
+
+.profile-picture {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.post-author {
+  font-weight: bold;
+  color: #000;
+}
+
+.follow-button {
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.post-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.post-image {
+  margin-top: 10px;
+  position: relative;
+}
+
+.post-image img {
+  width: 100%;
+  border-radius: 5px;
+}
+
+.post-caption {
+  padding: 10px;
+  color: #000;
+  font-size: 14px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.post-footer {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.like-button {
+  background-color: #2ecc71;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.post-likes {
+  margin-left: 5px;
+  color: #999;
+  font-size: 12px;
+}
+
+.follow-button,
+.like-button {
+  margin-right: 10px;
+}
+
+
+
+
+
+
+
+.popup {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.popup-content {
+  background-color: #fefefe;
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 500px;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: #333;
+  text-decoration: none;
+}
+
+#post-button {
+  background-color: #1da1f2;
+  color: #fff;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 900px;
+  margin-bottom: 50px;
+  margin-top: 10px;
+}
+
+.file-label {
+  display: inline-block;
+  background-color: #1da1f2;
+  color: #fff;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.post-button {
+  background-color: #1da1f2;
+  color: #fff;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#post-popup.show {
+  display: block;
+}
+
+h4 {
+  color: #000;
+}
+
+</style>
+
+
+
+<button id="post-button">Create Post</button>
+
+<div id="post-popup" class="popup">
+  <div class="popup-content">
+    <span class="close">&times;</span>
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <h4>Enter the caption/content of your post:</h4>
+      <textarea id="text-content" name="text-content" rows="10" cols="70"></textarea>
+      <input type="file" name="image">
+      <button type="submit">POST!</button>
+    </form>
+
+  </div>
+</div>
+
+<script>
+// JavaScript to toggle the pop-up
+const postButton = document.getElementById("post-button");
+const postPopup = document.getElementById("post-popup");
+const closeButton = document.getElementsByClassName("close")[0];
+
+postButton.addEventListener("click", function() {
+  postPopup.classList.add("show");
+});
+
+closeButton.addEventListener("click", function() {
+  postPopup.classList.remove("show");
+});
+
+</script>
+
+
+
+
+<div class="feed">
+  {% for p in posts %}
+    <div class="post">
+      <div class="post-header">
+        <div class="author-info">
+          <a href="{% url 'view-profile' p.author.id %}" class="author-profile">
+            <img src="{{ p.author.get_profile_pic }}"  class="profile-picture">
+          </a>
+          <div class="post-author">{{p.author.username}}</div>
+          {% if user != p.author %}
+            <div>
+              <form method="POST" action="">
+                  {% csrf_token %}
+                  <button type="submit" name="follow" value="{{p.author.id}}" class="follow-button">Follow</button>
+              </form>
+
+            </div>
+          {% endif %}
+        </div>
+      </div>
+      {% if p.varitey == "image" %}
+        <a href="{% url 'view-post' p.id %}" class="post-link">
+          <div class="post-image">
+            <img src="{{ p.get_image }}">
+          </div>
+          <div class="post-caption">{{p.content}}</div>
+        </a>
+      {% elif p.varitey == "text" %}
+        <a href="{% url 'view-post' p.id %}" class="post-link">
+          <div class="post-caption">{{p.content}}</div>
+        </a>
+      {% elif p.varitey == "video" %}
+          <video width="320" height="240" controls>
+            <source src="{{ p.get_image }}">
+          </video>
+          <a href="{% url 'view-post' p.id %}" class="post-link">
+            <div class="post-caption">{{p.content}}</div>
+          </a>
+      {% endif %}
+      <div class="post-footer">
+        <div>
+          <form method="POST" action="">
+              {% csrf_token %}
+              <button type="submit" name="like" value="{{p.id}}" class="like-button">Like</button>
+          </form>
+        </div>
+        <div class="post-likes">Likes: {{p.likes}}, {{p.posted_date}}</div>
+        <div class="post-likes">{{p.get_num_comments}} comments</div>
+      </div>
+    </div>
+  {% endfor %}
+  <!-- Add more post cards here -->
+</div>
+
+
+{% endblock %}
