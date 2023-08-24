@@ -322,5 +322,6 @@ def view_direct_message_chat(request, pk):
 
 
 # NOTE: PostgreSQL database will expire on render on Nov.21. 
-# -Make sure cloudinary amount ofassests are under control.
+# -Make sure cloudinary amount of assests are under control.
 # -Cannot deploy multiple apps on free tier on render, so try creating multiple accounts.
+# -When this website gets taken down by render have to reconfigure settings so you can run it locally.

@@ -229,70 +229,7 @@ h4 {
 
 </style>
 
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-  }
-  
-  .search-container {
-    width: 300px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  .search-container h2 {
-    margin-bottom: 10px;
-    font-size: 20px;
-  }
-
-  .search-input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-bottom: 10px;
-  }
-
-  .search-dropdown {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-  }
-
-  .search-button {
-    width: 100%;
-    background-color: #3498db;
-    color: #fff;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-
-  .search-button:hover {
-    background-color: #2980b9;
-  }
-</style>
-<!-- SEARCH FUNCTIONALITY -->
-<body>
-  <div class="search-container">
-    <h2>Search</h2>
-    <form action="/search" method="get">
-      <input type="text" class="search-input" name="query" placeholder="Enter your search query">
-      <select class="search-dropdown" name="type">
-        <option value="users">Users</option>
-        <option value="posts">Posts</option>
-      </select>
-      <button type="submit" class="search-button">Search</button>
-    </form>
-  </div>  
-</body>
+ 
 
 <!-- CREATE POST BUTTON -->
 <button id="post-button">Create Post</button>
