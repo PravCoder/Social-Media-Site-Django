@@ -156,7 +156,7 @@ CLOUDINARY_STORAGE = {
     "API_SECRET": "0ntHk7H1DjIXgLxcGspPtFjm_R8"
 }
 
-CLOUDINARY_URL = os.environ("CLOUDINARY_URL")
+CLOUDINARY_URL = os.environ.get("CLOUDINARY_URL")
 
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
