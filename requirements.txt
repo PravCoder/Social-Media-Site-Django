@@ -4,14 +4,9 @@ cloudinary==1.34.0
 Django==3.2.19
 django-allauth==0.46.0
 django-cloudinary-storage==0.3.0
-django-crispy-forms==1.12.0
-django-heroku==0.3.1
-django-js-asset==2.0.0
 django-mptt==0.14.0
-django-on-heroku==1.1.2
 django_debug_toolbar==3.8.1
 djangorestframework==3.11.2
-dnspython==2.1.0
 
 asgiref==3.7.2
 dj-database-url==2.0.0

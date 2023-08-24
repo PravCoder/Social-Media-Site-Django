@@ -220,7 +220,6 @@ def create_post(request):
             cloudinary_response = cloudinary.uploader.upload(uploaded_image, folder="media-images")
 
             public_id = cloudinary_response["public_id"]
-            print("PUBLIC-ID: " + str(public_id))
             p1 = Post.objects.create(content=caption, posted_date=datetime.now(), author=user, varitey="image", public_id_image=public_id)
             p1.image = cloudinary_response['secure_url']
 

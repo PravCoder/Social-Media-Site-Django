@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from pathlib import Path
+import cloudinary
 import cloudinary_storage
 import dj_database_url
 
@@ -154,6 +155,8 @@ CLOUDINARY_STORAGE = {
     "API_KEY":"238865844643449",
     "API_SECRET": "0ntHk7H1DjIXgLxcGspPtFjm_R8"
 }
+
+CLOUDINARY_URL = os.environ("CLOUDINARY_URL")
 
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
